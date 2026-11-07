@@ -304,10 +304,41 @@ class BaseSource(ABC):
 
 | Файл | Что годится |
 |---|---|
-| `gamma.py` | `build_retry_session`, пагинация событий (keyset и offset) с защитой от зацикливания — переезжает в `http/session.py` и `sources/polymarket/client.py` |
-| `parsing.py` | извлечение `outcomePrices` и `clobTokenIds`, сопоставление исходов и токенов — в `sources/polymarket/parse.py` |
+| `gamma.py` | `build_retry_session` и защита пагинации от повторяющейся страницы — в `http/session.py` и `sources/polymarket/client.py` |
+| `parsing.py` | извлечение `outcomePrices` и `clobTokenIds` — пригодится позже в `parse.py`, пока не перенесено |
 | `config.py` | базовые URL Gamma/CLOB — в `config/sources.yaml` |
-| `normalization.py` | подход «событие → строки рынков», но схема строки другая |
 
-Не переносим: `clob_client.py` (авторизованная торговля), `fetching.py` и
+Не переносим общий обход `/events/keyset` из `fetching.py`: он тащит все
+категории, не только спорт. Не переносим `clob_client.py` (торговля),
 `historical_fetching.py` (позиции и ордера пользователя), `temp.py`.
+
+---
+
+## 9. Polymarket: сырой сбор
+
+Реализовано в `collect_raw` (`arbx/sources/polymarket/client.py`). Разбор в
+`Quote` ещё не делается.
+
+Как устроен Gamma, по живому API:
+
+- `GET /sports` — каталог лиг. Киберспорт лежит в том же каталоге: у строки в
+  `tags` есть id `64` (`cs2`, `dota2`, `lol`, `val` и другие).
+- Матчи лиги — `GET /events?series_id=...`. Один `series` иногда записан в
+  каталоге дважды под разными кодами; качаем его один раз.
+- `closed=false` не отсекает сыгранное. К каждому запросу добавляется
+  `end_date_min = сейчас − end_date_slack_hours` (по умолчанию 12 часов),
+  чтобы оставить лайв и не тащить прошлый месяц.
+
+Снимок, который пишется в `data/raw/polymarket/<дата>/<время>.json`:
+
+```
+payload.catalog  сырой ответ /sports
+payload.events   сырые события, поля не выкидываются
+meta             счётчики, причина остановки, список ошибок по лигам
+```
+
+Ограничения для ноутбука: `max_seconds`, `max_events`, `series_codes`.
+Без них — полный проход каталога. Приоритетные лиги из
+`config/sources.yaml` идут первыми, поэтому короткий прогон попадает в
+NBA/EPL/CS2, а не в пустые серии. Файл короткого прогона уже большой
+(порядка 150 МБ на ~10 секунд): рынки сохраняются целиком.

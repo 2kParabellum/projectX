@@ -55,7 +55,15 @@ def load_settings(path: Path | None = None) -> Settings:
 
 def load_source_config(name: str, path: Path | None = None) -> dict[str, Any]:
     """Read one source's block from config/sources.yaml."""
-    raise NotImplementedError
+    import yaml
+
+    path = path or (CONFIG_DIR / "sources.yaml")
+    with path.open(encoding="utf-8") as handle:
+        document = yaml.safe_load(handle) or {}
+    block = document.get(name)
+    if not isinstance(block, dict):
+        raise KeyError(f"no source config named {name!r} in {path}")
+    return block
 
 
 def load_secrets() -> Secrets:

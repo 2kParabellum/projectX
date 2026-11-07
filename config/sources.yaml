@@ -7,8 +7,31 @@ polymarket:
   request_timeout_seconds: 30
   sleep_between_pages_seconds: 0.2
   needs_browser: false
-  # Gamma tag used to narrow the event feed down to sports.
-  tag_filter: Sports
+  # Gamma keeps finished matches closed=false. Drop events whose end is
+  # further in the past than this. Live games still come through.
+  end_date_slack_hours: 12
+  # Tag id on a /sports catalog row that marks the league as esports.
+  esports_tag_id: "64"
+  max_pages_per_series: 50
+  # Fetched first, so a short timed run still sees real matches.
+  priority_codes:
+    - nba
+    - nhl
+    - nfl
+    - mlb
+    - epl
+    - ucl
+    - lal
+    - bun
+    - sea
+    - mls
+    - cs2
+    - dota2
+    - lol
+    - val
+    - ufc
+    - atp
+    - wta
 
 fonbet:
   base_url: https://line.fon.bet
