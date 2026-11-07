@@ -1,0 +1,48 @@
+# Runtime settings. Secrets live in .env, not here.
+
+sources:
+  enabled:
+    - polymarket
+    # - fonbet
+    # - betboom
+
+sports:
+  - football
+  - basketball
+  - tennis
+  - icehockey
+
+matching:
+  # Two source events are candidates only if their start times are this close.
+  start_time_window_minutes: 180
+  # >= auto_link: linked automatically. >= review: queued for manual review.
+  # Below review: discarded.
+  score_auto_link: 92
+  score_review: 78
+
+arbitrage:
+  # Minimum margin (1 - sum of implied probabilities) to report, as a fraction.
+  min_margin: 0.01
+  # Quotes older than this are not used in a calculation.
+  max_quote_age_seconds: 120
+  # Assumed taker fee per side, as a fraction of stake.
+  fee_polymarket: 0.02
+  fee_bookmaker: 0.0
+  # Notional bankroll used to size the example stake split.
+  bankroll: 1000
+
+scheduler:
+  cycle_interval_seconds: 60
+
+notify:
+  enabled: false
+  # Do not resend the same opportunity unless its margin moved by this much.
+  dedupe_margin_delta: 0.005
+  dedupe_cooldown_seconds: 900
+
+storage:
+  data_dir: data
+  keep_raw_snapshots: true
+
+logging:
+  level: INFO

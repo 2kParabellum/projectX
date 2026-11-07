@@ -1,0 +1,25 @@
+__pycache__/
+*.pyc
+*.csv
+*.xlsx
+*.log
+.venv/
+venv/
+env/
+.env
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+# Notebooks are part of the project, but checkpoints and outputs are not.
+*.ipynb
+!notebooks/*.ipynb
+
+# Collected data and local state.
+data/
+*.sqlite
+*.parquet
+
+build/
+dist/
+*.egg-info/

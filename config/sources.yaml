@@ -1,0 +1,23 @@
+# Per-source connection settings. One block per adapter in arbx/sources/.
+
+polymarket:
+  gamma_base_url: https://gamma-api.polymarket.com
+  clob_base_url: https://clob.polymarket.com
+  page_size: 100
+  request_timeout_seconds: 30
+  sleep_between_pages_seconds: 0.2
+  needs_browser: false
+  # Gamma tag used to narrow the event feed down to sports.
+  tag_filter: Sports
+
+fonbet:
+  base_url: https://line.fon.bet
+  request_timeout_seconds: 20
+  sleep_between_requests_seconds: 0.5
+  needs_browser: false
+
+betboom:
+  base_url: https://betboom.ru
+  request_timeout_seconds: 20
+  sleep_between_requests_seconds: 0.5
+  needs_browser: false

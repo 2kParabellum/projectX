@@ -1,0 +1,26 @@
+# Seed dictionary of canonical names. Confirmed matches found at runtime are
+# written to the `aliases` table in SQLite; this file holds the hand-curated
+# starting set and always wins over learned entries.
+#
+# Format:
+#   canonical_name:
+#     - alias as it appears on some site
+#     - another alias
+
+teams:
+  manchester united:
+    - manchester utd
+    - man utd
+    - манчестер юнайтед
+    - манчестер юнайтед (м)
+  arsenal:
+    - arsenal fc
+    - арсенал
+    - арсенал лондон
+
+leagues:
+  epl:
+    - premier league
+    - english premier league
+    - апл
+    - англия. премьер-лига
